@@ -33,6 +33,12 @@ import { createAtlas } from "./component/create-atlas";
   drivingPlayer.scale.x = 0.33;
   drivingPlayer.scale.y = 0.33;
 
+  const killerEye = new AnimatedSprite(spritesheet.animations.drive);
+  killerEye.play();
+  killerEye.animationSpeed = 0.5;
+  killerEye.scale.x = 0.1;
+  killerEye.scale.y = 0.1;
+
   settings.SCALE_MODE = SCALE_MODES.NEAREST;
 
   const app = new Application({
@@ -41,7 +47,7 @@ import { createAtlas } from "./component/create-atlas";
   });
   document.body.appendChild(app.view as any);
 
-  app.stage.addChild(drivingPlayer);
+  // app.stage.addChild(killerEye);
 
   function onResize() {
     const elm = document.body;
@@ -53,7 +59,7 @@ import { createAtlas } from "./component/create-atlas";
 
   window.onresize = onResize;
 
-  const field = new SpiralField(KEYS, drivingPlayer);
+  const field = new SpiralField(KEYS, drivingPlayer, killerEye);
   field.position.set(500, 180);
   app.stage.addChild(field);
 

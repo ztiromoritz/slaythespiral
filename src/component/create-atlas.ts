@@ -34,6 +34,7 @@ export function createAtlas() {
 
   const animations = {
     drive: [3, 2, 1, 0].map(frame_name),
+    killer_eye: [16, 17, 18, 19].map(frame_name),
   };
 
   return {

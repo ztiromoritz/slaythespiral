@@ -12,7 +12,11 @@ export class SpiralField extends Container {
 
   private nextStar = 0;
 
-  constructor(private KEYS: any, private anim_sprite: Sprite) {
+  constructor(
+    private KEYS: any,
+    private anim_sprite: Sprite,
+    private killerEye: Sprite
+  ) {
     super();
 
     this.player = new Player(this.KEYS, anim_sprite);
@@ -55,7 +59,7 @@ export class SpiralField extends Container {
   onTick(delta: number) {
     if (this.nextStar <= 0) {
       this.spawnStar();
-      this.nextStar += Math.random() * 12500;
+      this.nextStar += Math.random() * 12;
     }
     this.nextStar -= delta;
 
