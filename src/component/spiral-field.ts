@@ -3,7 +3,7 @@ import { Entity } from "./entity";
 import { GameState } from "./game-state";
 import { Player } from "./player";
 import { Pos } from "./pos";
-import { sounds } from "./sounds";
+import { makeNewSounds, sounds } from "./sounds";
 
 export class SpiralField extends Container {
   private gameState = new GameState();
@@ -87,11 +87,23 @@ export class SpiralField extends Container {
     const entity = new Entity(this.gameState, sprite);
     entity.hitboxHeight = 10;
     entity.hitboxHandler = () => {
-      // setTimeout(() => {
-      //   alert('Score: ' + this.score);
-      // });
+      setTimeout(() => {
+        alert('Score: ' + this.score);
+
+        // reset
+        this.gameState.playerSpeed = 5;
+        this.gameState.pow = 1;
+        this.nextStar = 0;
+        this.nextEnemy = 0;
+        this.enemyIntervalMultiplier = 0;
+        this.score = 0;
+        this.entities.forEach(entity => entity.destroy());
+        this.entities = [];
+
+        makeNewSounds();
+      });
       sounds.explosion();
-      return false;
+      return true;
     }
 
     this.entities.push(entity);
@@ -101,7 +113,7 @@ export class SpiralField extends Container {
   onTick(delta: number) {
     if (this.nextStar <= 0) {
       this.spawnStar();
-      this.nextStar += Math.random() * 150 + 100;
+      this.nextStar += Math.random() * 50 + 50;
     }
     this.nextStar -= delta;
 
@@ -112,8 +124,8 @@ export class SpiralField extends Container {
     this.nextEnemy -= delta;
 
     this.score += 1;
-    // this.enemyIntervalMultiplier *= 0.999;
-    // this.gameState.playerSpeed += 0.001
+    this.enemyIntervalMultiplier *= 0.999;
+    this.gameState.playerSpeed += 0.001
 
     // update player
     this.player.onTick(delta);
