@@ -33,12 +33,6 @@ async function init() {
   drivingPlayer.scale.x = 0.33;
   drivingPlayer.scale.y = 0.33;
 
-  const killerEye = new AnimatedSprite(spritesheet.animations.drive);
-  killerEye.play();
-  killerEye.animationSpeed = 0.5;
-  killerEye.scale.x = 0.1;
-  killerEye.scale.y = 0.1;
-
   settings.SCALE_MODE = SCALE_MODES.NEAREST;
 
   const app = new Application({
@@ -59,7 +53,7 @@ async function init() {
 
   window.onresize = onResize;
 
-  const field = new SpiralField(KEYS, drivingPlayer, killerEye);
+  const field = new SpiralField(KEYS, drivingPlayer, spritesheet);
   field.position.set(500, 180);
   app.stage.addChild(field);
 

@@ -4,14 +4,16 @@ import { Player } from "./player";
 import { Pos } from "./pos";
 
 export class Entity extends Container {
-  private sprite: Sprite;
   pos: Pos;
 
-  hitboxRadius?: number;
+  hitboxHeight?: number;
   hitboxHandler?: () => boolean;
+
+  extraSpeed = 0;
 
   constructor(
     private s: GameState,
+    public sprite: Sprite,
   ) {
     super();
 
@@ -20,14 +22,13 @@ export class Entity extends Container {
       y: 0,
     };
 
-    this.sprite = Sprite.from('star.png');
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 1;
     this.addChild(this.sprite);
   }
 
   onTick(delta: number, player: Player) {
-    this.pos.x -= delta / 1000 * this.s.playerSpeed;
+    this.pos.x -= delta / 1000 * this.s.playerSpeed + this.extraSpeed;
 
     if (this.pos.x < this.s.minX) {
       return false;

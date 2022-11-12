@@ -6,4 +6,5 @@ export class GameState {
   readonly minX = -600;
 
   playerSpeed = 5;
+  pow = 1;
 }

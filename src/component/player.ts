@@ -5,7 +5,7 @@ import { Pos } from "./pos";
 import { sounds } from "./sounds";
 
 export class Player extends Container {
-  private sprite: Sprite;
+  sprite: Sprite;
   pos: Pos;
 
   readonly hitboxRadius = 10;
