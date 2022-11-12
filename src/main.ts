@@ -14,8 +14,10 @@ import {
 import { initControls } from "./controls";
 import { SpiralField } from "./component/spiral-field";
 import { createAtlas } from "./component/create-atlas";
+import { playMusic } from "./music";
 
 async function init() {
+  playMusic();
   const { KEYS } = initControls();
 
   const atlasData = createAtlas();

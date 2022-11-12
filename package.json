@@ -13,6 +13,7 @@
     "vite": "^3.2.3"
   },
   "dependencies": {
-    "pixi.js": "^7.0.4"
+    "pixi.js": "^7.0.4",
+    "portable-synthesizer": "^1.0.1"
   }
 }
