@@ -1,24 +1,35 @@
-import { Container, Sprite, Text, TextStyle } from "pixi.js";
+import { Container, DisplayObject, Sprite, Text, TextStyle } from "pixi.js";
+import { Entity } from "./entity";
+import { GameState } from "./game-state";
+import { Player } from "./player";
+import { Pos } from "./pos";
 
 export class SpiralField extends Container {
-  // eventually should dynamically adjust to window size:
-  private spiralRadius = 100;
+  private gameState = new GameState();
 
-  // logical space:
-  private cartLength = Math.PI * 8;
+  private player: Player;
+  private entities: Entity[] = [];
 
-  constructor() {
+  private nextStar = 0;
+
+  constructor(
+    private KEYS: any,
+  ) {
     super();
 
-    for (let x = -this.cartLength; x < this.cartLength; x += this.cartLength / 2500) {
+    this.player = new Player(this.KEYS, this.gameState);
+    this.addChild(this.player);
+
+    for (let x = -this.gameState.cartLength; x < this.gameState.cartLength; x += this.gameState.cartLength / 100) {
       let sprite = Sprite.from('public/char.png');
       sprite.anchor.y = 1;
       sprite.anchor.x = 0.5;
       // sprite.position.x = x;
       
-      const pos = this.project(x, -Math.pow(Math.sin(x * 10), 2) * 37);
+      // const pos = this.project({ x, y: -Math.pow(Math.sin(x * 10), 2) * 37});
+      const pos = this.project({ x, y: 0});
       sprite.position.set(pos.x, pos.y);
-      sprite.scale.set(pos.r * 0.25);
+      sprite.scale.set(pos.r * 0.05);
       sprite.rotation = pos.rot;
       this.addChild(sprite);
     }
@@ -26,28 +37,100 @@ export class SpiralField extends Container {
     new Text('asdf', new TextStyle())
   }
 
-  project(cartX: number, cartY: number) {
+  spawnStar() {
+    const entity = new Entity(this.gameState);
+    entity.hitboxRadius = 10;
+    entity.hitboxHandler = () => {
+      return false;
+    }
+
+    entity.pos.y = Math.random() * -50;
+    entity.setScale(Math.random() * 0.1 + 0.1);
+    this.entities.push(entity);
+    this.addChild(entity);
+  }
+
+  onTick(delta: number) {
+    if (this.nextStar <= 0) {
+      this.spawnStar();
+      this.nextStar += Math.random() * 12500;
+    }
+    this.nextStar -= delta;
+
+    // update player
+    this.player.onTick(delta);
+    this.projectEntity(this.player, this.player.pos);
+
+    // Update entities and remove dead ones:
+    this.entities = this.entities.filter(entity => {
+      const spriteAlive = entity.onTick(delta, this.player)
+      if (!spriteAlive) {
+        entity.destroy();
+      }
+      return spriteAlive;
+    });
+
+    // this.entities = this.entities.filter(entity => {
+    //   if (entity.hitboxRadius && entity.hitboxHandler) {
+    //     const playerCenter: Pos = {
+    //       x: this.player.pos.x,
+    //       y: this.player.pos.y - this.player.hitboxRadius,
+    //     };
+
+    //     const selfCenter: Pos = {
+    //       x: entity.pos.x,
+    //       y: entity.pos.y - entity.hitboxRadius,
+    //     }
+
+    //     const dx = playerCenter.x - selfCenter.x;
+    //     const dy = playerCenter.y - selfCenter.y;
+    //     const distance = Math.sqrt(dx * dx + dy * dy);
+
+    //     if (distance <= this.player.hitboxRadius + entity.hitboxRadius) {
+    //       console.log(distance, 'hit!');
+    //       const result = entity.hitboxHandler();
+    //       console.log('result', result);
+    //       return result;
+    //     }
+    //   }
+    // });
+
+    // Project display positions
+    for (const entity of this.entities) {
+      this.projectEntity(entity, entity.pos);
+    }
+  }
+
+  private projectEntity(disp: DisplayObject, pos: Pos) {
+    const proj = this.project(pos);
+    disp.position.set(proj.x, proj.y);
+    disp.scale.set(proj.r);
+    disp.rotation = proj.rot;
+  }
+
+  private project(pos: Pos) {
     // r = aeθ cot b
     // x = 2PI * θ
 
-    if (cartX < 0) {
+    if (pos.x < 0) {
       // negative: straight line
       return {
-        x: cartX * this.spiralRadius,
-        y: this.spiralRadius + cartY,
-        r: 1,
+        x: pos.x * this.gameState.spiralRadius,
+        y: this.gameState.spiralRadius + pos.y,
+        r: 1,// r / this.gameState.spiralRadius,
         rot: 0,
       };
     } else {
       // positive: enter the spiral
-      const cx = this.cartLength - cartX;
-      const theta = cx;
-      const rFloor = this.spiralRadius * 0.00004 * Math.pow(cx * Math.PI * 2, 2); // TODO: why 0.00004?
-      const r = rFloor + cartY * (1 - cartX / this.cartLength);
+      const pow = 1;
+      const cx = this.gameState.cartLength * Math.pow((this.gameState.cartLength - pos.x) / this.gameState.cartLength, pow);
+      const theta = cx;// / Math.PI * 2;
+      const rFloor = this.gameState.spiralRadius * this.gameState.magicNumber * Math.pow(cx * Math.PI * 2, 2); // TODO: why 0.00004?
+      const r = rFloor + pos.y * (1 - pos.x / this.gameState.cartLength);
       return {
         x: -r * Math.sin(theta),
         y: r * Math.cos(theta),
-        r: r / this.spiralRadius,
+        r: r / this.gameState.spiralRadius,
         rot: theta,
       };
     }
