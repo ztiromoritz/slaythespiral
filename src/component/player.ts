@@ -12,10 +12,7 @@ export class Player extends Container {
   private readonly jumpVy = -6;
   private readonly gravity = 0.5;
 
-  constructor(
-    private KEYS: any,
-    private s: GameState,
-  ) {
+  constructor(private KEYS: any, private anim_sprite: Sprite) {
     super();
 
     this.pos = {
@@ -23,7 +20,7 @@ export class Player extends Container {
       y: 0,
     };
 
-    this.sprite = Sprite.from('char.png');
+    this.sprite = anim_sprite;
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 1;
     this.addChild(this.sprite);

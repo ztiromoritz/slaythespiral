@@ -30,8 +30,8 @@ import { createAtlas } from "./component/create-atlas";
   const drivingPlayer = new AnimatedSprite(spritesheet.animations.drive);
   drivingPlayer.play();
   drivingPlayer.animationSpeed = 0.25;
-  drivingPlayer.scale.x = 2;
-  drivingPlayer.scale.y = 2;
+  drivingPlayer.scale.x = 0.33;
+  drivingPlayer.scale.y = 0.33;
 
   settings.SCALE_MODE = SCALE_MODES.NEAREST;
 
@@ -41,12 +41,6 @@ import { createAtlas } from "./component/create-atlas";
   });
   document.body.appendChild(app.view as any);
 
-  const sprite = Sprite.from("public/char.png");
-
-  sprite.anchor.set(0.5);
-  sprite.x = 40;
-  sprite.y = 40;
-  app.stage.addChild(sprite);
   app.stage.addChild(drivingPlayer);
 
   function onResize() {
@@ -59,17 +53,13 @@ import { createAtlas } from "./component/create-atlas";
 
   window.onresize = onResize;
 
-  const field = new SpiralField(KEYS);
+  const field = new SpiralField(KEYS, drivingPlayer);
   field.position.set(500, 180);
   app.stage.addChild(field);
 
   field.spawnStar();
 
   app.ticker.add((delta) => {
-    if (KEYS.up) {
-      sprite.x += delta * 4;
-    }
-
     if (KEYS.down) {
       field.spawnStar();
     }

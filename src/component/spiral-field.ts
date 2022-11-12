@@ -12,29 +12,31 @@ export class SpiralField extends Container {
 
   private nextStar = 0;
 
-  constructor(
-    private KEYS: any,
-  ) {
+  constructor(private KEYS: any, private anim_sprite: Sprite) {
     super();
 
-    this.player = new Player(this.KEYS, this.gameState);
+    this.player = new Player(this.KEYS, anim_sprite);
     this.addChild(this.player);
 
-    for (let x = -this.gameState.cartLength; x < this.gameState.cartLength; x += this.gameState.cartLength / 100) {
-      let sprite = Sprite.from('public/char.png');
+    for (
+      let x = -this.gameState.cartLength;
+      x < this.gameState.cartLength;
+      x += this.gameState.cartLength / 100
+    ) {
+      let sprite = Sprite.from("public/char.png");
       sprite.anchor.y = 1;
       sprite.anchor.x = 0.5;
       // sprite.position.x = x;
-      
+
       // const pos = this.project({ x, y: -Math.pow(Math.sin(x * 10), 2) * 37});
-      const pos = this.project({ x, y: 0});
+      const pos = this.project({ x, y: 0 });
       sprite.position.set(pos.x, pos.y);
       sprite.scale.set(pos.r * 0.05);
       sprite.rotation = pos.rot;
       this.addChild(sprite);
     }
 
-    new Text('asdf', new TextStyle())
+    new Text("asdf", new TextStyle());
   }
 
   spawnStar() {
@@ -42,7 +44,7 @@ export class SpiralField extends Container {
     entity.hitboxRadius = 10;
     entity.hitboxHandler = () => {
       return false;
-    }
+    };
 
     entity.pos.y = Math.random() * -50;
     entity.setScale(Math.random() * 0.1 + 0.1);
@@ -62,8 +64,8 @@ export class SpiralField extends Container {
     this.projectEntity(this.player, this.player.pos);
 
     // Update entities and remove dead ones:
-    this.entities = this.entities.filter(entity => {
-      const spriteAlive = entity.onTick(delta, this.player)
+    this.entities = this.entities.filter((entity) => {
+      const spriteAlive = entity.onTick(delta, this.player);
       if (!spriteAlive) {
         entity.destroy();
       }
@@ -117,15 +119,23 @@ export class SpiralField extends Container {
       return {
         x: pos.x * this.gameState.spiralRadius,
         y: this.gameState.spiralRadius + pos.y,
-        r: 1,// r / this.gameState.spiralRadius,
+        r: 1, // r / this.gameState.spiralRadius,
         rot: 0,
       };
     } else {
       // positive: enter the spiral
       const pow = 1;
-      const cx = this.gameState.cartLength * Math.pow((this.gameState.cartLength - pos.x) / this.gameState.cartLength, pow);
-      const theta = cx;// / Math.PI * 2;
-      const rFloor = this.gameState.spiralRadius * this.gameState.magicNumber * Math.pow(cx * Math.PI * 2, 2); // TODO: why 0.00004?
+      const cx =
+        this.gameState.cartLength *
+        Math.pow(
+          (this.gameState.cartLength - pos.x) / this.gameState.cartLength,
+          pow
+        );
+      const theta = cx; // / Math.PI * 2;
+      const rFloor =
+        this.gameState.spiralRadius *
+        this.gameState.magicNumber *
+        Math.pow(cx * Math.PI * 2, 2); // TODO: why 0.00004?
       const r = rFloor + pos.y * (1 - pos.x / this.gameState.cartLength);
       return {
         x: -r * Math.sin(theta),
@@ -136,4 +146,3 @@ export class SpiralField extends Container {
     }
   }
 }
-
