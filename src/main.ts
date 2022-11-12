@@ -18,8 +18,6 @@ import { createAtlas } from "./component/create-atlas";
 (async function () {
   const { KEYS } = initControls();
 
-  settings.SCALE_MODE = SCALE_MODES.NEAREST;
-
   const atlasData = createAtlas();
   console.log(JSON.stringify(atlasData, null, 2));
 
@@ -35,12 +33,13 @@ import { createAtlas } from "./component/create-atlas";
   drivingPlayer.scale.x = 2;
   drivingPlayer.scale.y = 2;
 
+  settings.SCALE_MODE = SCALE_MODES.NEAREST;
+
   const app = new Application({
     width: 640,
     height: 360,
-  }
-);
-document.body.appendChild(app.view as any);
+  });
+  document.body.appendChild(app.view as any);
 
   const sprite = Sprite.from("public/char.png");
 
@@ -50,35 +49,33 @@ document.body.appendChild(app.view as any);
   app.stage.addChild(sprite);
   app.stage.addChild(drivingPlayer);
 
-function onResize() {
-  const elm = document.body;
-  app.renderer.resize(elm.offsetWidth, elm.offsetHeight);
-  
-  field.position.set(elm.offsetWidth / 2, elm.offsetHeight / 2);
-  field.scale.set((elm.offsetHeight - 50) / 200);
-}
+  function onResize() {
+    const elm = document.body;
+    app.renderer.resize(elm.offsetWidth, elm.offsetHeight);
 
-window.onresize = onResize;
-
-
-
-const field = new SpiralField(KEYS);
-field.position.set(500, 180);
-app.stage.addChild(field);
-
-field.spawnStar();
-
-
-app.ticker.add((delta) => {
-  if (KEYS.up) {
-    sprite.x += delta * 4;
+    field.position.set(elm.offsetWidth / 2, elm.offsetHeight / 2);
+    field.scale.set((elm.offsetHeight - 50) / 200);
   }
 
-  if (KEYS.down) {
-    field.spawnStar();
-  }
+  window.onresize = onResize;
 
-  field.onTick(app.ticker.deltaMS);
-});
+  const field = new SpiralField(KEYS);
+  field.position.set(500, 180);
+  app.stage.addChild(field);
 
-onResize();
+  field.spawnStar();
+
+  app.ticker.add((delta) => {
+    if (KEYS.up) {
+      sprite.x += delta * 4;
+    }
+
+    if (KEYS.down) {
+      field.spawnStar();
+    }
+
+    field.onTick(app.ticker.deltaMS);
+  });
+
+  onResize();
+})();
