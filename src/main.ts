@@ -12,7 +12,7 @@ const app = new Application(
     height: 360,
   }
 );
-document.body.appendChild(app.view);
+document.body.appendChild(app.view as any);
 
 const sprite = Sprite.from("public/char.png");
 
@@ -20,20 +20,6 @@ sprite.anchor.set(0.5);
 sprite.x = 40;
 sprite.y = 40;
 app.stage.addChild(sprite);
-
-let x;
-
-///
-app.ticker.add((delta) => {
-  if (KEYS.up) {
-    sprite.x += delta * 4;
-  }
-});
-
-const field = new SpiralField();
-field.position.set(500, 180);
-app.stage.addChild(field);
-
 
 function onResize() {
   const elm = document.body;
@@ -44,9 +30,26 @@ function onResize() {
 }
 
 window.onresize = onResize;
+
+
+
+const field = new SpiralField(KEYS);
+field.position.set(500, 180);
+app.stage.addChild(field);
+
+field.spawnStar();
+
+
+app.ticker.add((delta) => {
+  if (KEYS.up) {
+    sprite.x += delta * 4;
+  }
+
+  if (KEYS.down) {
+    field.spawnStar();
+  }
+
+  field.onTick(app.ticker.deltaMS);
+});
+
 onResize();
-
-console.log("hello worlddd");
-
-
-
