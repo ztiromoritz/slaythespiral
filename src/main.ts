@@ -3,9 +3,15 @@ import "./style.css";
 import { Application, Sprite, Texture } from "pixi.js";
 
 import { initControls } from "./controls";
+import { SpiralField } from "./component/spiral-field";
 const { KEYS } = initControls();
 
-const app = new Application({ width: 640, height: 360 });
+const app = new Application(
+  {
+    width: 640,
+    height: 360,
+  }
+);
 document.body.appendChild(app.view);
 
 const sprite = Sprite.from("public/char.png");
@@ -24,4 +30,23 @@ app.ticker.add((delta) => {
   }
 });
 
+const field = new SpiralField();
+field.position.set(500, 180);
+app.stage.addChild(field);
+
+
+function onResize() {
+  const elm = document.body;
+  app.renderer.resize(elm.offsetWidth, elm.offsetHeight);
+  
+  field.position.set(elm.offsetWidth / 2, elm.offsetHeight / 2);
+  field.scale.set((elm.offsetHeight - 50) / 200);
+}
+
+window.onresize = onResize;
+onResize();
+
 console.log("hello worlddd");
+
+
+
