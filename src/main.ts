@@ -15,7 +15,7 @@ import { initControls } from "./controls";
 import { SpiralField } from "./component/spiral-field";
 import { createAtlas } from "./component/create-atlas";
 
-(async function () {
+async function init() {
   const { KEYS } = initControls();
 
   const atlasData = createAtlas();
@@ -69,9 +69,15 @@ import { createAtlas } from "./component/create-atlas";
     if (KEYS.down) {
       field.spawnStar();
     }
-
     field.onTick(app.ticker.deltaMS);
   });
 
   onResize();
-})();
+}
+
+const start_button = document.getElementById("start_button");
+
+start_button?.addEventListener("click", () => {
+  document.body.removeChild(start_button);
+  init();
+});

@@ -2,6 +2,8 @@ import { Container, Sprite } from "pixi.js";
 import { GameState } from "./game-state";
 import { Pos } from "./pos";
 
+import { sounds } from "./sounds";
+
 export class Player extends Container {
   private sprite: Sprite;
   pos: Pos;
@@ -29,6 +31,7 @@ export class Player extends Container {
   onTick(delta: number) {
     if (this.KEYS.up && this.pos.y == 0) {
       this.vy = this.jumpVy;
+      sounds.jump();
     }
 
     this.vy += this.gravity;

@@ -24,6 +24,19 @@ body {
   display: grid;
 }
 
+button {
+  all: unset;
+  margin: auto;
+
+  padding: 4rem;
+  border: 4px solid purple;
+  background-color: aqua;
+  color: black;
+  font-family: monospace;
+  font-weight: 900;
+  font-size: 32px;
+}
+
 canvas {
   margin: auto;
   image-rendering: pixelated;
