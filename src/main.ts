@@ -69,7 +69,7 @@ async function init() {
       field.spawnStar();
     }
     field.onTick(app.ticker.deltaMS);
-    debug!.innerHTML = `${app.ticker.deltaMS}`;
+    // debug!.innerHTML = `${app.ticker.deltaMS}`;
   });
 
   onResize();
