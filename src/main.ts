@@ -41,12 +41,12 @@ async function init() {
     width: 640,
     height: 360,
   });
-  document.body.appendChild(app.view as any);
+  document.getElementById("wrapper")!.appendChild(app.view as any);
 
   // app.stage.addChild(killerEye);
 
   function onResize() {
-    const elm = document.body;
+    const elm = document.getElementById("wrapper")!;
     app.renderer.resize(elm.offsetWidth, elm.offsetHeight);
 
     field.position.set(elm.offsetWidth / 2, elm.offsetHeight / 2);
@@ -61,11 +61,15 @@ async function init() {
 
   field.spawnStar();
 
-  app.ticker.add((delta) => {
+  const debug = document.getElementById("debug");
+
+  app.ticker.maxFPS = 60;
+  app.ticker.add(() => {
     if (KEYS.down) {
       field.spawnStar();
     }
     field.onTick(app.ticker.deltaMS);
+    debug!.innerHTML = `${app.ticker.deltaMS}`;
   });
 
   onResize();

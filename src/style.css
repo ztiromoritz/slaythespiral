@@ -6,7 +6,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: black;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,7 +15,12 @@
   -webkit-text-size-adjust: 100%;
 }
 
-html, body {
+* {
+  user-select: none;
+}
+
+html,
+body {
   height: 100vh;
 }
 
@@ -35,6 +40,8 @@ button {
   font-family: monospace;
   font-weight: 900;
   font-size: 32px;
+
+  z-index: 10;
 }
 
 canvas {
@@ -42,5 +49,22 @@ canvas {
   image-rendering: pixelated;
 }
 
+#debug {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  color: red;
+  padding: 10%;
+  font-size: 4rem;
+}
 
-
+#wrapper {
+  position: fixed;
+  top: 0;
+  bottom: 15%;
+  left: 0;
+  right: 0;
+}

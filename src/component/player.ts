@@ -30,11 +30,11 @@ export class Player extends Container {
 
   onTick(delta: number) {
     if (this.KEYS.up && this.pos.y == 0) {
-      this.vy = this.jumpVy;
+      this.vy = this.jumpVy * (delta / 16);
       sounds.jump();
     }
-
-    this.vy += this.gravity;
+    console.log({ delta });
+    this.vy += this.gravity * Math.pow(delta / 16, 2);
     this.pos.y = Math.min(0, this.pos.y + this.vy);
   }
 }

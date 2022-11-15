@@ -40,5 +40,13 @@ export function initControls() {
     }
   });
 
+  document.addEventListener("touchstart", () => {
+    KEYS.up = true;
+  });
+
+  document.addEventListener("touchend", () => {
+    KEYS.up = false;
+  });
+
   return { KEYS };
 }
